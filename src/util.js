@@ -106,7 +106,7 @@ function getLastWorkout() {
   if (workoutsDefinedList.length > 0) {
     lastWorkoutName = workoutsDefinedList.pop().getTitle()
   } else {
-    lastWorkoutName = WORKOUTS.pop().name;
+    lastWorkoutName = WORKOUTS[0].name;
   }
 
   return WORKOUTS.filter(item => item.name == lastWorkoutName)[0];
