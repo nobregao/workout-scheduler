@@ -8,9 +8,9 @@ const TIME = {
 }
 
 const WORKOUTS = [
+  formatWorkout("aeróbico", `${WORKOUT_TIME} aeróbico — pegar fones`),
   formatWorkout("superior", `${WORKOUT_TIME} superiores — pegar luvas`),
-  formatWorkout("inferior", `${WORKOUT_TIME} inferiores — pegar luvas`),
-  formatWorkout("aeróbico", `${WORKOUT_TIME} aeróbico — pegar fones`)
+  formatWorkout("inferior", `${WORKOUT_TIME} inferiores — pegar luvas`)
 ];
 
 const DAYS_WEEK = 7;
@@ -106,7 +106,7 @@ function getLastWorkout() {
   if (workoutsDefinedList.length > 0) {
     lastWorkoutName = workoutsDefinedList.pop().getTitle()
   } else {
-    lastWorkoutName = WORKOUTS[0].name;
+    lastWorkoutName = WORKOUTS[WORKOUTS.length - 1].name;
   }
 
   return WORKOUTS.filter(item => item.name == lastWorkoutName)[0];
