@@ -14,6 +14,7 @@ const WORKOUTS = [
 ];
 
 const DAYS_WEEK = 7;
+const HOUR_START_WORK = 8;
 
 
 /**
@@ -34,8 +35,9 @@ function addDays(date, days) {
   return result;
 }
 
-function getDaysToSearch(daysForGenerate) {
-  return Object.keys(new Array(daysForGenerate).fill(null)).map(Number)
+function getDaysToSearch(days, signal = "+") {
+  return Object.keys(new Array(days).fill(null))
+    .map(days => addDays(new Date(), Number(signal == "+" ? days : -days)))
 }
 
 
@@ -74,13 +76,20 @@ function createEvent(title, startDate, description) {
   getCalendarHobbies().createEvent(title, startDate, endDate, { description });
 };
 
-function updateCancelledEvent(date, eventName) {
-  let event = getEventsForDay(date, eventName)[0];
+function updateCancelledEventAndRemoveWorkoutDay(date) {
+  let eventWorkoutCancelled = getEventsForDay(date, WORKOUT_CANCELLED_NAME_EVENT)[0];
 
-  event.setColor(CalendarApp.EventColor.GRAY);
-  event.setDescription("");
-  event.removeAllReminders();
-  event.setAllDayDate(date);
+  eventWorkoutCancelled.setColor(CalendarApp.EventColor.GRAY);
+  eventWorkoutCancelled.setDescription("");
+  eventWorkoutCancelled.removeAllReminders();
+  eventWorkoutCancelled.setAllDayDate(date);
+
+  deleteWorkoutDay(date)
+}
+
+function deleteWorkoutDay(date) {
+  let event = getEventsForDay(date, WORKOUT_TIME)[0];
+  event && event.deleteEvent();
 }
 
 
@@ -93,13 +102,11 @@ function formatWorkout(type, name) {
 }
 
 function getLastWorkout() {
-  const lastWeek = getDaysToSearch(DAYS_WEEK).map(numberDays => addDays(new Date(), -numberDays));
-  const nextWeek = getDaysToSearch(DAYS_WEEK).map(numberDays => addDays(new Date(), numberDays));
+  const lastWeek = getDaysToSearch(DAYS_WEEK, "-");
 
   const firstDayLastWeek = lastWeek[lastWeek.length - 1];
-  const lastDayNextWeek = nextWeek[nextWeek.length - 1];
 
-  const workoutsDefinedList = getEventForDates(firstDayLastWeek, lastDayNextWeek, WORKOUT_TIME);
+  const workoutsDefinedList = getEventForDates(firstDayLastWeek, new Date(), WORKOUT_TIME);
 
   let lastWorkoutName = ""
 
@@ -113,6 +120,7 @@ function getLastWorkout() {
 }
 
 function getNextWorkout(lastWorkout) {
+
   let indexLastWorkout = WORKOUTS.findIndex(workout => workout.name === lastWorkout.name)
 
   if (indexLastWorkout == WORKOUTS.length - 1) {
@@ -120,4 +128,9 @@ function getNextWorkout(lastWorkout) {
   }
 
   return WORKOUTS[indexLastWorkout + 1];
+}
+
+function createNextWorkout(nextWorkout, date) {
+  deleteWorkoutDay(date);
+  createEvent(nextWorkout.name, date, getDescriptionTemplate(nextWorkout.type));
 }

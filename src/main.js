@@ -1,33 +1,29 @@
 function main() {
 
-    var lastWorkout = getLastWorkout();
-  
-    const datesNextWeek = getDaysToSearch(7).map(numberDays => addDays(new Date(), numberDays));
-  
-    const getWorkoutByDateAndName = (date, name) => getEventsForDay(date, name)[0]?.getTitle();
-  
-    datesNextWeek.forEach(date => {
-  
-      let workoutDay = getWorkoutByDateAndName(date, WORKOUT_TIME);
-  
-      if (workoutDay != undefined) {
-        lastWorkout = formatWorkout("", workoutDay);
-        return;
+  var lastWorkout = getLastWorkout();
+
+  const datesNextWeek = getDaysToSearch(DAYS_WEEK);
+
+  const _getWorkoutByDateAndName = (date, name) => getEventsForDay(date, name)[0]?.getTitle();
+  const _whenNotSetWorkout = date => isToday(date) && date.getHours() > HOUR_START_WORK;
+
+  datesNextWeek
+    .filter(date => {
+
+      let isCancelled = _getWorkoutByDateAndName(date, WORKOUT_CANCELLED_NAME_EVENT);
+      if (isCancelled) {
+        updateCancelledEventAndRemoveWorkoutDay(date);
       }
-  
-      if (isToday(date) && date.getHours() > 8) {
-        return;
-      }
-  
-      let workoutCancelled = getWorkoutByDateAndName(date, WORKOUT_CANCELLED_NAME_EVENT);
-      if (workoutCancelled) {
-        updateCancelledEvent(date, WORKOUT_CANCELLED_NAME_EVENT);
-        return;
-      }
-  
+
+      return !isCancelled && !_whenNotSetWorkout(date);
+    })
+    .forEach(date => {
+
       let nextWorkout = getNextWorkout(lastWorkout);
-      createEvent(nextWorkout.name, date, getDescriptionTemplate(nextWorkout.type));
-  
+      
+      console.log(`Dia ${date.getDate()}`, 'próximo treino é ', nextWorkout)
+      createNextWorkout(nextWorkout, date);
+
       lastWorkout = nextWorkout;
     });
-  }
+}
