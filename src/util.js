@@ -76,7 +76,7 @@ function createEvent(title, startDate, description) {
   getCalendarHobbies().createEvent(title, startDate, endDate, { description });
 };
 
-function updateCancelledEventAndRemoveWorkoutDay(date) {
+function updateCancelledEventAndRemoveCalendar(date) {
   let eventWorkoutCancelled = getEventsForDay(date, WORKOUT_CANCELLED_NAME_EVENT)[0];
 
   eventWorkoutCancelled.setColor(CalendarApp.EventColor.GRAY);
