@@ -3,8 +3,9 @@ const WORKOUT_TIME = 'treinar';
 const WORKOUT_CANCELLED_NAME_EVENT = 'workout cancelled';
 
 const TIME = {
-  START: { HOUR: 6, MINUTE: 0 },
-  SUNDAY: { HOUR: 8, MINUTE: 0 }
+  DEFAULT: { HOUR: 6, MINUTE: 0 },
+  SUNDAY: { HOUR: 8, MINUTE: 0 },
+  PERSONAL: { HOUR: 12, MINUTE: 0 }
 }
 
 const WORKOUTS = [
@@ -14,19 +15,26 @@ const WORKOUTS = [
 ];
 
 const DAYS_WEEK = 7;
-const HOUR_START_WORK = 8;
 
 
 /**
  * date / datetime
  */
-
+// Sunday - Saturday : 0 - 6
 const isSunday = date => date.getDay() == 0;
+const isTuesday = date => date.getDay() == 2;
+const isThursday = date => date.getDay() == 4;
 
 const isToday = date => formatDate(date) == formatDate(new Date());
 
 function formatDate(date) {
   return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`
+}
+
+function subtractDay(date) {
+  var newDate = new Date(date);
+  newDate.setDate(date.getDate() - 1);
+  return newDate;
 }
 
 function addDays(date, days) {
@@ -58,19 +66,27 @@ function getDescriptionTemplate(type) {
 
 function createEvent(title, startDate, description) {
 
-  startDate.setHours(TIME.START.HOUR);
-  startDate.setMinutes(TIME.START.MINUTE);
+  startDate.setHours(TIME.DEFAULT.HOUR);
+  startDate.setMinutes(TIME.DEFAULT.MINUTE);
 
   let endDate = new Date(startDate);
-  endDate.setHours(TIME.START.HOUR + 2);
-  endDate.setMinutes(TIME.START.MINUTE);
+  endDate.setHours(TIME.DEFAULT.HOUR + 1);
+  endDate.setMinutes(TIME.DEFAULT.MINUTE);
 
   if (isSunday(startDate)) {
     startDate.setHours(TIME.SUNDAY.HOUR);
     startDate.setMinutes(TIME.SUNDAY.MINUTE);
 
-    endDate.setHours(TIME.SUNDAY.HOUR + 2);
+    endDate.setHours(TIME.SUNDAY.HOUR + 1);
     endDate.setMinutes(TIME.SUNDAY.MINUTE);
+  }
+
+  if (isTuesday(startDate) || isThursday(startDate)) {
+    startDate.setHours(TIME.PERSONAL.HOUR);
+    startDate.setMinutes(TIME.PERSONAL.MINUTE);
+
+    endDate.setHours(TIME.PERSONAL.HOUR + 1);
+    endDate.setMinutes(TIME.PERSONAL.MINUTE);
   }
 
   getCalendarHobbies().createEvent(title, startDate, endDate, { description });
@@ -106,8 +122,8 @@ function getLastWorkout() {
 
   const firstDayLastWeek = lastWeek[lastWeek.length - 1];
 
-  const workoutsDefinedList = getEventForDates(firstDayLastWeek, new Date(), WORKOUT_TIME);
-
+  const workoutsDefinedList = getEventForDates(firstDayLastWeek, subtractDay(new Date()), WORKOUT_TIME);
+  
   let lastWorkoutName = ""
 
   if (workoutsDefinedList.length > 0) {
@@ -130,7 +146,7 @@ function getNextWorkout(lastWorkout) {
   return WORKOUTS[indexLastWorkout + 1];
 }
 
-function createNextWorkout(nextWorkout, date) {
+function createWorkout(nextWorkout, date) {
   deleteWorkoutDay(date);
   createEvent(nextWorkout.name, date, getDescriptionTemplate(nextWorkout.type));
 }

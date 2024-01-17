@@ -5,7 +5,7 @@ function main() {
   const datesNextWeek = getDaysToSearch(DAYS_WEEK);
 
   const _getWorkoutCancelledForDay = date => getEventsForDay(date, WORKOUT_CANCELLED_NAME_EVENT)[0]?.getTitle();
-  const _whenNotSetWorkout = date => isToday(date) && date.getHours() > HOUR_START_WORK;
+  const _getWorkoutExistForDay = date => getEventsForDay(date, WORKOUT_TIME)[0]?.getTitle();
 
   datesNextWeek
     .filter(date => {
@@ -15,14 +15,15 @@ function main() {
         updateCancelledEventAndRemoveCalendar(date);
       }
 
-      return !isWorkoutDayCancelled && !_whenNotSetWorkout(date);
+      let isWorkoutExistCancelled = _getWorkoutExistForDay(date);
+
+      return !isWorkoutDayCancelled && !isWorkoutExistCancelled;
     })
     .forEach(date => {
-
       let nextWorkout = getNextWorkout(lastWorkout);
-      
+
       console.log(`Dia ${date.getDate()} treino é ${nextWorkout.type}`)
-      // createNextWorkout(nextWorkout, date);
+      createWorkout(nextWorkout, date);
 
       lastWorkout = nextWorkout;
     });
