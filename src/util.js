@@ -1,6 +1,7 @@
 const WORKOUT_TIME = 'treinar';
 
 const WORKOUT_CANCELLED_NAME_EVENT = 'workout cancelled';
+const WORKOUT_MOBILITY_DAY = "mobilidade";
 
 const TIME = {
   DEFAULT: { HOUR: 6, MINUTE: 0 },
@@ -59,6 +60,8 @@ const getEventForDates = (startDate, endDate, search) => getCalendarHobbies().ge
 
 const getEventsForDay = (date, search) => getCalendarHobbies().getEventsForDay(date, { search })
 
+const isMobilityDay = date => getEventsForDay(date, WORKOUT_MOBILITY_DAY)[0] != undefined;
+
 function getDescriptionTemplate(type) {
   return `treino de <b>${type}</b>\n
 <a href="${LINK_WORKOUTS}"><span>workout</span></a>`;
@@ -79,14 +82,17 @@ function createEvent(title, startDate, description) {
 
     endDate.setHours(TIME.SUNDAY.HOUR + 1);
     endDate.setMinutes(TIME.SUNDAY.MINUTE);
-  }
 
-  if (isTuesday(startDate) || isThursday(startDate)) {
+  } else if (isTuesday(startDate) || isThursday(startDate)) {
     startDate.setHours(TIME.PERSONAL.HOUR);
     startDate.setMinutes(TIME.PERSONAL.MINUTE);
 
     endDate.setHours(TIME.PERSONAL.HOUR + 1);
     endDate.setMinutes(TIME.PERSONAL.MINUTE);
+
+  } else if (isMobilityDay(startDate)){
+    startDate.setHours(startDate.getHours() + 1)
+    endDate.setHours(endDate.getHours() + 1)
   }
 
   getCalendarHobbies().createEvent(title, startDate, endDate, { description });
