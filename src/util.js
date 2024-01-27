@@ -156,3 +156,5 @@ function createWorkout(nextWorkout, date) {
   deleteWorkoutDay(date);
   createEvent(nextWorkout.name, date, getDescriptionTemplate(nextWorkout.type));
 }
+
+module.exports = { isSunday, isTuesday, isThursday, isToday, addDays, subtractDay, formatDate};
