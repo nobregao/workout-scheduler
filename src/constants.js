@@ -7,9 +7,7 @@ const TIME = {
 const WORKOUT_TIME = 'treinar';
 
 const WORKOUTS = [
-  formatWorkout("aeróbico", `${WORKOUT_TIME} aeróbico — pegar fones`),
-  formatWorkout("superior", `${WORKOUT_TIME} superiores — pegar luvas`),
-  formatWorkout("inferior", `${WORKOUT_TIME} inferiores — pegar luvas`)
+  formatWorkout("type", `${WORKOUT_TIME} name`)
 ];
 
 const WORKOUT_CANCELLED_NAME_EVENT = 'workout cancelled';
