@@ -23,7 +23,7 @@ Em seguida, conceda as permissões de manipulação de eventos.
 
 - **Tratamento de Eventos Cancelados:** Caso um treino seja cancelado, o sistema atualiza o evento no calendário, alterando a cor para cinza e removendo descrição e lembretes. Para isso é preciso criar um evento na mesma agenda com o título `workout cancelled`
 
-## Execução do Projeto
+## Execução
 
 Para executar o projeto no Google Apps Script, basta colar o código no Editor de Scripts e chamar a função `main()`. Certifique-se de ter as permissões necessárias para acessar e modificar o calendário do Google associado.
 
@@ -35,6 +35,13 @@ Para facilitar a execução, utilize a tecla de atalho:
 - No macOS: Pressione `Cmd + R`.
 
 Lembre-se de verificar regularmente as atualizações da API ou ajustar os parâmetros conforme necessário para garantir a precisão do calendário.
+
+## Testes
+
+Execute os testes em sua IDE local com o comando
+```bash
+npm test
+```
 
 ## Automatizando a Execução
 
