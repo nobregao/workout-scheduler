@@ -1,6 +1,6 @@
-const { isSunday, isTuesday, isThursday, isToday, addDays, subtractDay, formatDate } = require('../src/util');
+const { isSunday, isTuesday, isThursday, isToday, formatDate, subtractDay, addDays, getDaysToSearch } = require('../../src/util/date');
 
-describe("Date Functions", () => {
+describe("Date Util Functions", () => {
 
   describe("isSunday", () => {
     it("should return true if the date is a Sunday", () => {
@@ -70,4 +70,39 @@ describe("Date Functions", () => {
       expect(addDays(testDate, 1).getDate()).toBe(30);
     });
   });
+
+  describe("getDaysToSearch", function () {
+
+    it("should return an array", function () {
+      expect(Array.isArray(getDaysToSearch(5))).toBe(true);
+    });
+
+    it("should return the correct number of dates for searching", function () {
+      expect(getDaysToSearch(3)).toHaveSize(3);
+    });
+
+    it("should return dates as instances of Date", function () {
+      let dates = getDaysToSearch(2)
+
+      expect(dates[0] instanceof Date).toBe(true);
+      expect(dates[1] instanceof Date).toBe(true);
+    });
+
+    it("should return dates in the future", function () {
+      const futureDates = getDaysToSearch(3)
+      const currentDate = futureDates[0];
+
+      expect(futureDates[1] > currentDate).toBe(true);
+      expect(futureDates[2] > currentDate).toBe(true);
+    });
+
+    it("should return dates in the past when signal is '-'", function () {
+      const pastDates = getDaysToSearch(3, "-");
+      const currentDate = pastDates[pastDates.length - 1];
+
+      expect(pastDates[0] < currentDate).toBe(true);
+      expect(pastDates[1] < currentDate).toBe(true);
+    });
+  });
+
 });  
