@@ -36,9 +36,15 @@ Para facilitar a execução, utilize a tecla de atalho:
 
 Lembre-se de verificar regularmente as atualizações da API ou ajustar os parâmetros conforme necessário para garantir a precisão do calendário.
 
+## Build
+Localmente, execute o comando abaixo para baixar as dependências.
+```bash
+npm install
+```
+
 ## Testes
 
-Execute os testes em sua IDE local com o comando
+Execute os testes local com o comando:
 ```bash
 npm test
 ```
